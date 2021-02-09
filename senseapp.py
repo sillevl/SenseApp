@@ -8,6 +8,8 @@ from senseapp.api import API
 
 import time
 
+import subprocess
+
 class SenseApp:
 
     settings_manager = None
@@ -30,6 +32,10 @@ class SenseApp:
         print('still alive')
 
         # self.sense.display("*** SenseApp ***")
+
+        ip = subprocess.getoutput("hostname -I | awk '{print $1}'")
+        print("IP: {}".format(ip))
+        self.sense.display(ip,color=[255,98,1])
 
     def run(self):
         while True:
