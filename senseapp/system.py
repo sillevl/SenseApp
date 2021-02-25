@@ -1,29 +1,37 @@
 from ._version import __version__
+import platform
+import psutil
+import os
+import sys
+import socket
 
 class System:
+
+    def get_networks(self):
+        interfaces = psutil.net_if_addrs()
+        results = {}
+        for interface in interfaces:
+            if interface == 'lo': continue
+            print(interface)
+            results[interface] = { "mac": None, "ip": None}
+            for sni in interfaces[interface]:
+                if sni.family == socket.AF_PACKET:
+                    results[interface]["mac"] = sni.address
+                if sni.family == socket.AF_INET:
+                    results[interface]["ip"] = sni.address
+        return results
 
     def info(self):
         return {
             "version": __version__,
-            "os": "Raspberry Pi OS v2.3",
-            "hostname": "foobar",
-            "network": {
-                "eth": {
-                    "mac": "qsdfsdfm",
-                    "ip": "sdfousdf",
-                    "status": "online"
-                },
-                "eth": {
-                    "mac": "qsdfsdfm",
-                    "ip": "sdfousdf",
-                    "status": "offline"
-                }
-            },
+            "os": platform.platform(),
+            "hostname": platform.node(),
+            "network": self.get_networks(),
             "python": {
-                "version": "1.2.3"
+                "version": sys.version.partition("\n")[0]
             },
             "node": {
-                "version": "1.2.3"
+                "version": os.popen("node --version").read().partition("\n")[0]
             },
-            "uptime": 12345
+            "uptime": os.popen('uptime -p').read()[:-1]
         }
