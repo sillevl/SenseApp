@@ -12,9 +12,11 @@ Every time new sensorvalues are availabe, updates will automatically be send to 
 
 ```json
 {
-    "humidity": 22.098386764526367,
-    "temperature": 38.38396453857422,
-    "pressure": 1008.396728515625
+  "sensor_values": {
+    "humidity": 27.164823532104492,
+    "temperature": 36.82665252685547,
+    "pressure": 1035.015625
+  }
 }
 ```
 
