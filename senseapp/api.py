@@ -23,6 +23,7 @@ class API:
         except OSError:
             pass
         self.socket.bind(socket_file_path)
+        os.chmod(socket_file_path, 0o777)
         self.socket.listen(1)
         self.run()
 
