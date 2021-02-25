@@ -56,19 +56,28 @@ class API:
 
 
     def get_all_settings(self, conn):
-        conn.send(str.encode(json.dumps(self.context.settings_manager.get_all())))
+        self.send("settings", self.context.settings_manager.get_all(), conn)
 
     def get_system_info(self, conn):
-        conn.send(str.encode(json.dumps(self.context.system_manager.info())))
+        self.send("system_info", self.context.system_manager.info(), conn)
         
     def update_settings(self, settings):
         self.context.settings_manager.set_all(settings)
         print(self.context.settings_manager.get_all())
+        for client in self.clients:
+            self.get_all_settings(client)
 
     def update_sensor_values(self, sensor_values):
         for client in self.clients:
-            try:
-                client.send(str.encode(json.dumps(sensor_values)))
-            except BrokenPipeError:
-                self.clients.remove(client)
+            self.send("sensor_values", sensor_values, client)
 
+
+    def send(self, type, data, conn):
+        payload = {
+            type: data
+        }
+        try:
+            conn.send(str.encode(json.dumps(payload) + ""))
+        except BrokenPipeError:
+            print("[ERROR] Websocket pipe broken, removing client")
+            self.clients.remove(conn)
