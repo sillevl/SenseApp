@@ -39,20 +39,25 @@ class API:
             while True:
                 data = conn.recv(1024)
                 if not data: break
-                message = json.loads(data.decode("utf-8"))
-                print(f"New message: {message}")
+                data = data.decode("utf-8")
 
-                if "get" in message.keys():
-                    for key in message["get"]:
-                        if key == "system_info":
-                            self.get_system_info(conn)
-                        if key == "settings":
-                            self.get_all_settings(conn)
+                decoder = json.JSONDecoder()
+                data = data.lstrip() # decode hates leading whitespace
+                while data:
+                    message, index = decoder.raw_decode(data)
+                    data = data[index:].lstrip()
 
-                if "post" in message.keys():
-                    for key in message["post"]:
-                        if key == "settings":
-                            self.update_settings(message["post"]["settings"])
+                    if "get" in message.keys():
+                        for key in message["get"]:
+                            if key == "system_info":
+                                self.get_system_info(conn)
+                            if key == "settings":
+                                self.get_all_settings(conn)
+
+                    if "post" in message.keys():
+                        for key in message["post"]:
+                            if key == "settings":
+                                self.update_settings(message["post"]["settings"])
 
 
     def get_all_settings(self, conn):
