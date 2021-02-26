@@ -32,36 +32,32 @@ class API:
         self.thread.start()
 
     def wait_for_message(self):
-        try:
+        while True:
+            conn, addr = self.socket.accept()
+            self.clients.append(conn)
+            print("Socket connected", conn, addr)
             while True:
-                conn, addr = self.socket.accept()
-                self.clients.append(conn)
-                print("Socket connected", conn, addr)
-                while True:
-                    data = conn.recv(1024)
-                    if not data: break
-                    data = data.decode("utf-8")
+                data = conn.recv(1024)
+                if not data: break
+                data = data.decode("utf-8")
 
-                    decoder = json.JSONDecoder()
-                    data = data.lstrip() # decode hates leading whitespace
-                    while data:
-                        message, index = decoder.raw_decode(data)
-                        data = data[index:].lstrip()
+                decoder = json.JSONDecoder()
+                data = data.lstrip() # decode hates leading whitespace
+                while data:
+                    message, index = decoder.raw_decode(data)
+                    data = data[index:].lstrip()
 
-                        if "get" in message.keys():
-                            for key in message["get"]:
-                                if key == "system_info":
-                                    self.get_system_info(conn)
-                                if key == "settings":
-                                    self.get_all_settings(conn)
+                    if "get" in message.keys():
+                        for key in message["get"]:
+                            if key == "system_info":
+                                self.get_system_info(conn)
+                            if key == "settings":
+                                self.get_all_settings(conn)
 
-                        if "post" in message.keys():
-                            for key in message["post"]:
-                                if key == "settings":
-                                    self.update_settings(message["post"]["settings"])
-        except Exception as e:
-            print(e)
-            self.wait_for_message()
+                    if "post" in message.keys():
+                        for key in message["post"]:
+                            if key == "settings":
+                                self.update_settings(message["post"]["settings"])
 
 
     def get_all_settings(self, conn):
