@@ -12,7 +12,6 @@ class System:
         results = {}
         for interface in interfaces:
             if interface == 'lo': continue
-            print(interface)
             results[interface] = { "mac": None, "ip": None}
             for sni in interfaces[interface]:
                 if sni.family == socket.AF_PACKET:
