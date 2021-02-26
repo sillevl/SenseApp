@@ -22,6 +22,10 @@ class SenseHat:
     def display(self, text, color = None, speed = None):
         if not color: color = [255, 255, 255]
         if not speed: speed = self.settings.get("display_speed")
+
+        brightness = self.settings.get("brightness")
+        color = [ int(subcolor * (brightness / 255)) for subcolor in color]
+
         self.display_bussy = True
         self.hat.show_message(text, text_colour=color, scroll_speed=speed)
         self.display_bussy = False
