@@ -50,6 +50,7 @@ class Manager:
         if setting not in self.settings.keys():
             raise Warning(f"Setting {setting} does not exist ({self.settings})")
         self.settings[setting] = value
+        self.__update(setting, value)
         self.save()
 
     def get(self, setting):
@@ -64,7 +65,6 @@ class Manager:
         for key, value in settings.items():
             try:
                 self.set(key, value)
-                self.__update(key, value)
             except:
                 print(f"Settings does not contain a key {key}")
         print(f"Settings updated: {self.settings}")
