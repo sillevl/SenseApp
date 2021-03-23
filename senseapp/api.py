@@ -49,8 +49,6 @@ class API:
 
                     if "get" in message.keys():
                         for key in message["get"]:
-                            if key == "system_info":
-                                self.get_system_info(conn)
                             if key == "settings":
                                 self.get_all_settings(conn)
 
@@ -62,9 +60,6 @@ class API:
 
     def get_all_settings(self, conn):
         self.send("settings", self.context.settings_manager.get_all(), conn)
-
-    def get_system_info(self, conn):
-        self.send("system_info", self.context.system_manager.info(), conn)
         
     def update_settings(self, settings):
         self.context.settings_manager.set_all(settings)

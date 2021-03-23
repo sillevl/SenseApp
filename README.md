@@ -22,16 +22,6 @@ Every time new sensorvalues are availabe, updates will automatically be send to 
 
 ### Get information
 
-#### System info
-
-To get the systeminformation you need to send the a `get` message to the application, containing an array of the wanted values
-
-```json
-{
-    "get": ["system_info"]
-}
-```
-
 #### Current settings
 
 In order to get the current settings, the following request can be send to the application.
@@ -39,16 +29,6 @@ In order to get the current settings, the following request can be send to the a
 ```json
 {
     "get": ["settings"]
-}
-```
-
-#### Combining requests
-
-You can combine multiple information requests in a single request. The responses will be send sepparatly.
-
-```json
-{
-    "get": ["settings", "system_info"]
 }
 ```
 

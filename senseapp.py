@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 from senseapp import config
-from senseapp.system import System
 from senseapp.sense_hat import SenseHat
 from senseapp.thermostat import Thermostat
 from senseapp.api import API
@@ -11,21 +10,18 @@ import time
 class SenseApp:
 
     settings_manager = None
-    system_manager = None
     sense_hat = None
     api = None
 
     def __init__(self):
         self.settings_manager = config.Manager()
         self.settings_manager.on_update(self.settings_updated)
-        self.system_manager = System()
         self.sense = SenseHat(self.settings_manager)
         self.api = API(self)
 
         self.api.connect()
 
         print(self.settings_manager.get_all())
-        print(self.system_manager.info())
         print(self.sense.get_sensor_values())
         print('still alive')
 
