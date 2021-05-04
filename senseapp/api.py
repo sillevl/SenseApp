@@ -2,6 +2,8 @@ import threading
 import socket,os
 import json
 
+from ._version import __version__
+
 DEAULT_SOCKET_PATH="/tmp/senseapp.sock"
 
 class API:
@@ -49,6 +51,8 @@ class API:
 
                     if "get" in message.keys():
                         for key in message["get"]:
+                            if key == "version":
+                                self.get_version(conn)
                             if key == "settings":
                                 self.get_all_settings(conn)
 
@@ -57,6 +61,8 @@ class API:
                             if key == "settings":
                                 self.update_settings(message["post"]["settings"])
 
+    def get_version(self, conn):
+        self.send("version", __version__, conn)
 
     def get_all_settings(self, conn):
         self.send("settings", self.context.settings_manager.get_all(), conn)
