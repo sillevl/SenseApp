@@ -22,6 +22,16 @@ Every time new sensorvalues are availabe, updates will automatically be send to 
 
 ### Get information
 
+#### Version
+
+To get the systeminformation you need to send the a `get` message to the application, containing an array of the wanted values
+
+```json
+{
+    "get": ["version"]
+}
+```
+
 #### Current settings
 
 In order to get the current settings, the following request can be send to the application.
