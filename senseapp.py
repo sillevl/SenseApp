@@ -7,6 +7,8 @@ from senseapp.api import API
 
 import time
 
+import subprocess
+
 class SenseApp:
 
     settings_manager = None
@@ -26,6 +28,19 @@ class SenseApp:
         print('still alive')
 
         # self.sense.display("*** SenseApp ***")
+
+    def get_ip(self):
+        ip = subprocess.getoutput("ip -4 addr | grep -oP '(?<=inet\s)\d+(\.\d+){3}'")
+        if ip=="127.0.0.1":
+            return "NO IP!"
+        else:
+            return ip.replace("127.0.0.1\n", "").replace("\n", " | ")
+
+    def print_ip(self):
+        ip = self.get_ip()
+        print("IP: {}".format(ip))
+        screen_output = ip + " - " + ip + " - " + ip
+        self.sense.display(screen_output, color=[255,98,1])
 
     def run(self):
         while True:
@@ -71,5 +86,8 @@ class SenseApp:
 
 
 if __name__ == "__main__":
+    # sleep for 5 sec to let DHCP finish first before requesting the ip
+    time.sleep(5.0)
     app = SenseApp()
+    app.print_ip()
     app.run()
